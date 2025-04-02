@@ -1,0 +1,13 @@
+FROM python:3.11-slim
+
+WORKDIR /dcm2nifti-seg/preprocess
+
+# 依存ライブラリとdcm2niix（システムパッケージ）をインストール
+RUN apt-get update && apt-get install -y \
+    libfreetype6-dev \
+    libpng-dev \
+    dcm2niix \
+ && rm -rf /var/lib/apt/lists/*
+
+# preprocess.pyで使用するPythonパッケージをインストール
+RUN pip install --no-cache-dir pydicom nibabel matplotlib

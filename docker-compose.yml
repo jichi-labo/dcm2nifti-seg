@@ -1,0 +1,39 @@
+services:
+  preprocess:
+    build:
+      context: ./preprocess
+    volumes:
+      - ${LOCAL_MOUNT_ROOT}:${DOCKER_MOUNT_ROOT}
+    command: sh -c "cd ${DOCKER_MOUNT_ROOT} && python preprocess/preprocess.py"
+    tty: true
+    stdin_open: true
+    ipc: host
+    user: "${UID}:${GID}"
+    environment:
+      - TZ=Asia/Tokyo
+
+  totalsegmentator:
+    build:
+      context: ./totalsegmentator
+    volumes:
+      - ${LOCAL_MOUNT_ROOT}:${DOCKER_MOUNT_ROOT}
+    command: sh -c "cd ${DOCKER_MOUNT_ROOT} && python totalsegmentator/run_totalsegmentator.py"
+    runtime: nvidia
+    ipc: host
+    user: "${UID}:${GID}"
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - TZ=Asia/Tokyo
+
+  suprem:
+    build:
+      context: ./suprem
+    volumes:
+      - ${LOCAL_MOUNT_ROOT}:${DOCKER_MOUNT_ROOT}
+    command: sh -c "cd ${DOCKER_MOUNT_ROOT} && python suprem/run_suprem.py"
+    runtime: nvidia
+    ipc: host
+    user: "${UID}:${GID}"
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - TZ=Asia/Tokyo

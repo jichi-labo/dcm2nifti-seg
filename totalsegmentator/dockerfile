@@ -1,0 +1,18 @@
+FROM nvcr.io/nvidia/pytorch:23.05-py3
+
+RUN apt-get update
+# Needed for fury vtk. ffmpeg also needed
+RUN apt-get install ffmpeg libsm6 libxext6 -y
+RUN apt-get install xvfb -y
+
+RUN pip install --upgrade pip
+RUN pip install fury
+
+# installing pyradiomics results in an error in github actions
+# RUN pip pyradiomics
+
+
+WORKDIR /dcm2nifti-seg/totalsegmentator
+
+# GPU対応PyTorchとその他パッケージをインストール
+RUN pip install --no-cache-dir TotalSegmentator numpy nibabel torch torchvision --extra-index-url https://download.pytorch.org/whl/cu118
